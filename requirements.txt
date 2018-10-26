@@ -11,4 +11,7 @@ pymongo==2.8
 pytz==2015.2
 six==1.9.0
 wsgiref==0.1.2
+<<<<<<< HEAD
 connexion
+=======
+>>>>>>> 1eec739ee1447947bf49423e494b70c27edc6095
