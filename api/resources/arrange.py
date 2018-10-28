@@ -1,9 +1,11 @@
-from flask import Flask, jsonify, url_for, redirect, request
+from flask import Flask, jsonify, json, url_for, redirect, request
 from flask_pymongo import PyMongo, MongoClient
 from flask_restful import fields, marshal_with, reqparse, Resource
+from bson import json_util
+from bson.objectid import ObjectId
 from urllib import quote_plus
 
-APP_URL = "http://127.0.0.1:5000"
+APP_URL = "http://127.0.0.1:8080"
 
 post_parser = reqparse.RequestParser()
 post_parser.add_argument(
@@ -22,7 +24,7 @@ post_parser.add_argument(
     help='The start datetime',
 )
 post_parser.add_argument(
-    'start_at', dest='endAt',
+    'end_at', dest='endAt',
     location='json',
     help='The end datetime',
 )
@@ -43,40 +45,32 @@ class Arrange(Resource):
         self.db = kwargs['db']
 
     def get(self, id=None, range=None, emotion=None):
-        data = []
+        data = request.args
+
+        if id is None:
+            id = data['id']
 
         if id:
-            tweet_info = mongo.db.tweets.find_one({"id": id}, {"_id": 0})
-            if tweet_info:
-                return jsonify({"status": "ok", "data": tweet_info})
+            arrange_info = self.db.arrange.find_one({"_id": ObjectId(id)})
+            if arrange_info:
+                return jsonify({"status": "ok", 
+                "data": json.dumps(arrange_info, default=json_util.default)})
             else:
-                return {"response": "no tweet found for {}".format(id)}
+                return {"response": "no arrange found for {}".format(id)}
 
         elif range:
             #YYYYMMDDHHMMSS
             range = range.split('to')
-            cursor = mongo.db.tweets.find({"timestamp":{"$gt": int(range[0])}, "timestamp":{"$lt": int(range[1])}}, {"_id": 0}).limit(10)
-            for tweet in cursor:
-                tweet['url'] = APP_URL + url_for('tweets') + "/" + tweet.get('id')
-                data.append(tweet)
+            cursor = self.db.arrage.find({"timestamp":{"$gt": int(range[0])}, "timestamp":{"$lt": int(range[1])}}, {"_id": 0}).limit(10)
+            for arrange in cursor:
+                data.append(arrange)
 
             return jsonify({"range": range, "response": data})
-
-        elif emotion:
-            cursor = mongo.db.tweets.find({"emotion": emotion}, {"_id": 0}).limit(10)
-            for tweet in cursor:
-                tweet['url'] = APP_URL + url_for('tweets') + "/" + tweet.get('id')
-                data.append(tweet)
-
-            return jsonify({"emotion": emotion, "response": data})
-
         else:
-            cursor = mongo.db.tweets.find({}, {"_id": 0, "update_time": 0}).limit(10)
+            cursor = self.db.arrange.find({}, {"_id": 0, "update_time": 0}).limit(10)
 
-            for tweet in cursor:
-                print(tweet)
-                tweet['url'] = APP_URL + url_for('tweets') + "/" + tweet.get('id')
-                data.append(tweet)
+            for arrange in cursor:
+                data.append(arrange)
 
             return jsonify({"response": data})
 
@@ -87,24 +81,14 @@ class Arrange(Resource):
             data = {"response": "ERROR"}
             return jsonify(data)
         else:
-            arrange = self.db.insert(data)
+            arrange = self.db.arrange.insert(data)
             return arrange
-        # else:
-        #     id = data.get('id')
-        #     if id:
-        #         if db.find_one({"id": id}):
-        #             return {"response": "already exists."}
-        #         else:
-        #             db.insert(data)
-        #     else:
-        #         return {"response": "id number missing"}
-        # return redirect(url_for("arrangement"))
 
     def put(self, id):
         data = request.get_json()
-        mongo.db.tweets.update({'id': id}, {'$set': data})
-        return redirect(url_for("tweets"))
+        self.db.arrange.update({'id': id}, {'$set': data})
+        return redirect(url_for("arrange"))
 
     def delete(self, id):
-        mongo.db.tweets.remove({'id': id})
-        return redirect(url_for("tweets"))
+        self.db.arrange.remove({'id': id})
+        return redirect(url_for("arrange"))
