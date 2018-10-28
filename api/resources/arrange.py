@@ -1,6 +1,7 @@
 import datetime
 
 from flask import Flask, jsonify, json, url_for, redirect, request
+from flask.ext.api import status
 from flask_pymongo import PyMongo, MongoClient
 from flask_restful import fields, marshal, marshal_with, reqparse, Resource
 from bson import json_util
@@ -32,13 +33,11 @@ post_parser.add_argument(
     location='json',
     help='The end datetime',
 )
-
 post_parser.add_argument(
     'created_at', dest='createdAt',
     location='json',
     help='Creation',
 )
-
 post_parser.add_argument(
     'upadated_at', dest='updatedAt',
     location='json',
@@ -65,17 +64,19 @@ class Arrange(Resource):
     def __init__(self, **kwargs):
         self.db = kwargs['db']
 
-    def get(self, id=None, range=None, emotion=None):
-        data = request.args
+    def get(self, id=None, range=None):
+        data = []
 
-        if id is None:
+        if request.args:
+            data = request.args
+        
+        if id is None and data and data['id']:
             id = data['id']
-
+        
         if id:
             arrange_info = self.db.arrange.find_one({"_id": ObjectId(id)})
             if arrange_info:
-                return jsonify({"status": "ok", 
-                "data": json.dumps(arrange_info, default=json_util.default)})
+                return jsonify(marshal(json_util._json_convert(arrange_info), arrange_fields))
             else:
                 return {"response": "no arrange found for {}".format(id)}
 
@@ -106,7 +107,7 @@ class Arrange(Resource):
             arrange = self.db.arrange.insert_one(data)
             return {
                 "_id": str(arrange.inserted_id)
-            }
+            }, status.HTTP_201_CREATED
 
     @marshal_with(arrange_fields)
     def put(self):
