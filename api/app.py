@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import sys
 
 from flask import Flask, jsonify, url_for, redirect, request, Blueprint
 from flask_pymongo import PyMongo, MongoClient
@@ -33,6 +34,9 @@ mongo = PyMongo(app)
 client = MongoClient(uri)
 db = client.desafioluiza
 
+def main(host, port ,debug):
+    # asldkjlasd
+    app.run(host, port ,debug)
 
 class Index(Resource):
     def get(self):
@@ -47,4 +51,4 @@ api.add_resource(Arrange, "/v1/arrange", endpoint="arrange",
 # api.add_resource(Arrange, "/v1/range/<string:range>", endpoint="range")
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000 ,debug=True)
+    main(sys.argv[3:])
