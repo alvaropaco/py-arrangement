@@ -8,6 +8,7 @@ from flask_restful import Api, Resource
 from urllib import quote_plus, quote
 
 from resources.arrange import Arrange
+from common.logger import Logger
 
 app = Flask(__name__)
 api_bp = Blueprint('api', __name__)
@@ -35,7 +36,7 @@ client = MongoClient(uri)
 db = client.desafioluiza
 
 def main(host, port ,debug):
-    # asldkjlasd
+    Logger(app)
     app.run(host, port ,debug)
 
 class Index(Resource):
@@ -46,9 +47,6 @@ api = Api(app)
 api.add_resource(Index, "/v1", endpoint="index")
 api.add_resource(Arrange, "/v1/arrange", endpoint="arrange", 
     resource_class_kwargs={ 'db': db })
-# api.add_resource(Arrange, "/v1/<string:id>", endpoint="id")
-# api.add_resource(Arrange, "/v1/emotion/<string:emotion>", endpoint="emotion")
-# api.add_resource(Arrange, "/v1/range/<string:range>", endpoint="range")
 
 if __name__ == "__main__":
     main(sys.argv[3:])
