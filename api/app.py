@@ -14,18 +14,17 @@ app = Flask(__name__)
 api_bp = Blueprint('api', __name__)
 app.register_blueprint(api_bp)
 
+mongo_host = os.environ['MONGO_HOST']
 mongo_user = os.environ['MONGO_USER']
 mongo_pass = os.environ['MONGO_PASS']
 mongo_port = os.environ['MONGO_PORT']
 mongo_dB   = os.environ['MONGO_DB']
-uri = ("mongodb://{user}:{password}@" + 
-      "cluster0-shard-00-00-h3iwf.mongodb.net:27017," + 
-      "cluster0-shard-00-01-h3iwf.mongodb.net:27017," +
-      "cluster0-shard-00-02-h3iwf.mongodb.net:{port}/{db}?"+ 
-      "ssl=true&readPreference=secondary&" +
-      "replicaSet=Cluster0-shard-0&authSource=admin").format(
+# "cluster0-shard-00-00-h3iwf.mongodb.net:27017," + 
+#       "cluster0-shard-00-01-h3iwf.mongodb.net:27017," +
+#       "cluster0-shard-00-02-h3iwf.mongodb.net:{port}/{db}?"+
+uri = ("mongodb://{user}:{password}@{host}:{port}/{db}?ssl=false").format(
           user=mongo_user, password=mongo_pass, 
-          port=mongo_port, db=mongo_dB)
+          host=mongo_host, port=mongo_port, db=mongo_dB)
 app.config["MONGO_URI"] = uri
 app.config["MONGO_DBNAME"] = "desafioluiza"
 
@@ -45,7 +44,7 @@ class Index(Resource):
 
 api = Api(app)
 api.add_resource(Index, "/v1", endpoint="index")
-api.add_resource(Arrange, "/v1/arrange", endpoint="arrange", 
+api.add_resource(Arrange, "/v1/arrange", "/v1/arrange/<string:id>", endpoint="arrange", 
     resource_class_kwargs={ 'db': db })
 
 if __name__ == "__main__":

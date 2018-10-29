@@ -3,10 +3,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 .pytest_cache/
-<<<<<<< HEAD
 log/
-=======
->>>>>>> 8597f1263b34163d9ecda7eb0b0e2bbbcec75ff1
 
 # C extensions
 *.so
@@ -99,3 +96,4 @@ Lib/
 tcl/
 Scripts/
 pip-selfcheck.json
+.vscode/

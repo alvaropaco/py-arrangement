@@ -12,3 +12,5 @@ pytz==2015.2
 six==1.9.0
 wsgiref==0.1.2
 nose2==0.6.0
+nose2[coverage_plugin]>=0.6.5
+python-dateutil>=2.7.5

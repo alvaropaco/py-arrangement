@@ -4,7 +4,7 @@ from datetime import datetime
 
 class Logger:
      def __init__(self, app):
-        logFileName = "log/{now}:debug.log".format(now=datetime.now())
+        logFileName = "log/debug.log"
         print('Starting application...')
         print('Loggin into {fileName}'.format(fileName=logFileName))
         formatter = logging.Formatter(

@@ -1,7 +1,8 @@
-import datetime
+from datetime import datetime
+import time
+import dateutil.parser
 
 from flask import Flask, jsonify, json, url_for, redirect, request
-from flask.ext.api import status
 from flask_pymongo import PyMongo, MongoClient
 from flask_restful import fields, marshal, marshal_with, reqparse, Resource
 from bson import json_util
@@ -46,64 +47,98 @@ post_parser.add_argument(
 
 
 arrange_fields = {
-    "endAt": fields.String(attribute='end_at'),
-    "id": fields.String,
+    "endAt": fields.Float(attribute='end_at'),
+    "id": fields.String(attribute='_id.$oid'),
     "room": fields.String,
-    "startAt": fields.String(attribute='start_at'),
+    "startAt": fields.Float(attribute='start_at'),
     "title": fields.String,
-    "createdAt": fields.String(attribute='created_at'),
-    "updatedAt": fields.String(attribute='updated_at')
+    "createdAt": fields.Float(attribute='created_at'),
+    "updatedAt": fields.Float(attribute='updated_at')
 }
+
+# arrangements_list = {
+#     "arranments": fields.List
+# }
 
 created_arrangement_response = {
     '_id': fields.String
 }
 
+def getTimestamp(dt):
+    return round(time.mktime(dt.timetuple()) + dt.microsecond/1e6)
 
 class Arrange(Resource):
     def __init__(self, **kwargs):
         self.db = kwargs['db']
 
-    def get(self, id=None, range=None):
+    @marshal_with(arrange_fields)
+    def get(self, id=None):
         data = []
 
         if request.args:
             data = request.args
-        
-        if id is None and data and data['id']:
-            id = data['id']
-        
-        if id:
+
+        if id is not None:
             arrange_info = self.db.arrange.find_one({"_id": ObjectId(id)})
             if arrange_info:
-                return jsonify(marshal(json_util._json_convert(arrange_info), arrange_fields))
+                return json_util._json_convert(arrange_info)
             else:
                 return {"response": "no arrange found for {}".format(id)}
-
-        elif range:
+        
+        if data:
             #YYYYMMDDHHMMSS
-            range = range.split('to')
-            cursor = self.db.arrage.find({"timestamp":{"$gt": int(range[0])}, "timestamp":{"$lt": int(range[1])}}, {"_id": 0}).limit(10)
+            start_timestamp = float(data['start'])
+            end_timestamp   = float(data['end'])
+
+            query = {
+                "$or": [
+                    {"start_at": {
+                        "$gte": start_timestamp, 
+                        "$lt": end_timestamp
+                    }},
+                    {"end_at": {
+                        "$gte": start_timestamp, 
+                        "$lt": end_timestamp
+                    }}
+                ]
+            }
+
+            cursor = self.db.arrange.find(query).limit(25)
+
+            respond = []
+            
             for arrange in cursor:
-                data.append(arrange)
+                arrangeObj = json_util._json_convert(arrange)
+                respond.append(arrangeObj)
 
-            return jsonify({"range": range, "response": data})
-        else:
-            cursor = self.db.arrange.find({}, {"_id": 0, "update_time": 0}).limit(10)
+            return respond
+        
+        cursor = self.db.arrange.find({}).limit(50)
 
-            for arrange in cursor:
-                data.append(arrange)
+        respond = []
+            
+        for arrange in cursor:
+            arrangeObj = json_util._json_convert(arrange)
+            respond.append(arrangeObj)
 
-            return jsonify({"response": data})
+        return respond
 
     @marshal_with(created_arrangement_response)
     def post(self):
         data = request.get_json()
+
         if not data:
             data = {"response": "ERROR"}
-            return jsonify(data)
+            return jsonify(data), 400
         else:
-            data['created_at'] = datetime.datetime.now()
+            data['created_at'] = getTimestamp(datetime.utcnow())
+            
+            startAt = getTimestamp(dateutil.parser.parse(data['start_at']))
+            endAt = getTimestamp(dateutil.parser.parse(data['end_at']))
+            
+            data['start_at'] = startAt
+            data['end_at'] = endAt
+
             arrange = self.db.arrange.insert_one(data)
             return {
                 "_id": str(arrange.inserted_id)
@@ -112,7 +147,7 @@ class Arrange(Resource):
     @marshal_with(arrange_fields)
     def put(self):
         data = request.get_json()
-        data['updated_at'] = datetime.datetime.now()
+        data['updated_at'] = datetime.isoformat(datetime.now())
 
         q = {"_id": ObjectId(data['id'])}
 
