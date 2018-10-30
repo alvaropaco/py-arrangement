@@ -53,8 +53,8 @@ jobs:
       - run:
           name: run tests
           command: |
-            sudo service mongod start
-            mongod --version
+            sudo service mongodb start
+            mongodb --version
             mongo --version
       - run:
           name: run tests
