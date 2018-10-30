@@ -55,7 +55,7 @@ jobs:
           command: |
             sudo mkdir -p /data/db
             sudo mkdir -p /data/db/log
-            mongod --dbpath data/db --fork --logpath data/db/log
+            mongod --dbpath /data/db --fork --logpath /data/db/log
             mongod
             sudo service mongod start
             mongodb --version
