@@ -54,7 +54,7 @@ jobs:
           name: run mongo
           command: |
             sudo mkdir -p /data/db
-            sudo mkdir -p /data/db/log
+            sudo touch /data/db/log
             mongod --dbpath /data/db --logpath /data/db/log
             mongod
             sudo service mongod start
