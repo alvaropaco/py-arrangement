@@ -10,7 +10,7 @@ jobs:
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:2.7.15
         environment:          
-          MONGO_HOST: localhost
+          MONGO_HOST: 172.27.0.3
           MONGO_USER: luiza
           MONGO_PASS: password123
           MONGO_DB: desafioluiza
@@ -70,7 +70,7 @@ jobs:
             echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
             sudo apt-get update
             sudo apt-get install -y mongodb-org-shell
-            mongo -u "luiza" -p "password123" --authenticationDatabase "desafioluiza"
+            mongo -u "luiza" -p "password123" --authenticationDatabase "desafioluiza" --host 172.27.0.3
       - run:
           name: run tests
           command: |
