@@ -53,13 +53,13 @@ jobs:
             echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
             sudo apt-get update
             sudo apt-get install -y mongodb-org
-            sudo service mongodb start
+            mongo --version
             mongo --host 127.0.0.1:27017
       - run:
           name: run tests
           command: |
             . venv/bin/activate
-            sudo service mongodb start
+            mongo --version
             nose2
 
       - store_artifacts:
