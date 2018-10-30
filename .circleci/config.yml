@@ -13,20 +13,13 @@ jobs:
           MONGO_HOST: localhost
           MONGO_USER: luiza
           MONGO_PASS: password123
-          MONGO_DB: desafioluisa
+          MONGO_DB: desafioluiza
           MONGO_PORT: 27017
       - image: bitnami/mongodb:latest
         environment:
           MONGODB_DATABASE: desafioluiza
           MONGODB_PASSWORD: password123
           MONGODB_USERNAME: luiza
-      - image: samsao/mongo-shell:3.4
-        environment:
-          MONGO_HOST: localhost
-          MONGO_PORT: 27017
-          MONGO_USER: luiza
-          MONGO_PASS: password123
-          MONGO_DB: desafioluisa
 
     working_directory: ~/repo
 
@@ -68,7 +61,12 @@ jobs:
           command: dockerize -wait tcp://localhost:27017 -timeout 1m
       - run:
           name: 
-          command: mongo -u "luiza" -p "password123" --authenticationDatabase "desafioluiza"
+          command: |
+            apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+            echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+            apt-get update
+            apt-get install -y mongodb-org-shell
+            mongo -u "luiza" -p "password123" --authenticationDatabase "desafioluiza"
       - run:
           name: run tests
           command: |
