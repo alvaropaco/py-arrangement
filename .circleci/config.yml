@@ -20,6 +20,7 @@ jobs:
           MONGODB_DATABASE: desafioluiza
           MONGODB_PASSWORD: password123
           MONGODB_USERNAME: luiza
+        command: awk 'END{print $1}' /etc/hosts
 
     working_directory: ~/repo
 
