@@ -55,6 +55,7 @@ jobs:
           command: |
             sudo mkdir -p /data/db
             sudo touch /data/db/log
+            sudo chmod 777 /data/db/ -R
             mongod --dbpath /data/db --logpath /data/db/log
             mongod
             sudo service mongod start
