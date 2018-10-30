@@ -9,8 +9,6 @@ from bson import json_util
 from bson.objectid import ObjectId
 from urllib import quote_plus
 
-from ..common.JSONEncoder import JSONEncoder
-
 APP_URL = "http://127.0.0.1:8080"
 
 post_parser = reqparse.RequestParser()
