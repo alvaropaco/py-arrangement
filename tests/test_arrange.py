@@ -2,6 +2,7 @@
 import unittest
 import requests
 from bson import json_util
+import json
 
 from ..api.app import app
 
@@ -13,6 +14,23 @@ class ArrangeTestCase(unittest.TestCase):
         self.app = app.test_client()
         self.arrange = {'name': 'Arrangements'}
 
+    def test_arrange_creation_happy_flow(self):
+        """Test API can create a arrangement (POST request)"""
+        arrange = {
+            "title": "Teste",
+            "room": "ABC123",
+            "start_at": "2018-10-29T23:29:09.479878",
+            "end_at": "2018-11-29T23:29:09.479878"
+        }
+        
+        res = self.app.post('http://127.0.0.1:5000/v1/arrange', 
+        data=json.dumps(arrange), content_type='application/json')
+        
+        data = json_util._json_convert(res.data)
+        
+        self.assertEqual(res.status_code, 201)
+        #self.assertEqual(str(data.title), "Arrangement Test Title")
+    
     def test_arrange_creation_unhappy_flow(self):
         """Test API can create a arrangement (POST request)"""
         arrange = {	

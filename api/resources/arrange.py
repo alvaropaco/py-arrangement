@@ -152,7 +152,8 @@ class Arrange(Resource):
         q = {"_id": ObjectId(data['id'])}
 
         self.db.arrange.update(q, {'$set': data})
-        updated_arrangement = self.db.arrange.find_one(q)
+        self.db.arrange.find_one(q)
+        
         return data
 
     def delete(self, id):
