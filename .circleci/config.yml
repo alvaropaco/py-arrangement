@@ -9,11 +9,12 @@ jobs:
       # specify the version you desire here
       # use `-browsers` prefix for selenium tests, e.g. `3.6.1-browsers`
       - image: circleci/python:2.7.15
+      - image: bitnami/mongodb:latest
       
-      # Specify service dependencies here if necessary
-      # CircleCI maintains a library of pre-built images
-      # documented at https://circleci.com/docs/2.0/circleci-images/
-      # - image: circleci/postgres:9.4
+        environment:
+          MONGODB_DATABASE: desafioluiza
+          MONGODB_PASSWORD: password123
+          MONGODB_USERNAME: luiza
 
     working_directory: ~/repo
 
@@ -49,6 +50,11 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
+            export MONGO_HOST=127.0.0.1
+            export MONGO_USER=luiza
+            export MONGO_PASS=password123
+            export MONGO_DB=desafioluisa
+            export MONGO_PORT=27017
             nose2
 
       - store_artifacts:
