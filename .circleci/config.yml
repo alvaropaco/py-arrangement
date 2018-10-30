@@ -15,6 +15,7 @@ jobs:
           MONGO_PASS=password123
           MONGO_DB=desafioluisa
           MONGO_PORT=27017
+ 
       - image: bitnami/mongodb:latest
         environment:
           MONGODB_DATABASE: desafioluiza
