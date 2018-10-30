@@ -147,15 +147,23 @@ class Arrange(Resource):
     @marshal_with(arrange_fields)
     def put(self):
         data = request.get_json()
-        data['updated_at'] = datetime.isoformat(datetime.now())
+
+        startAt = getTimestamp(dateutil.parser.parse(data['start_at']))
+        endAt = getTimestamp(dateutil.parser.parse(data['end_at']))
+        updatedAt = getTimestamp(datetime.now())
+
+        data['start_at'] = startAt
+        data['end_at'] = endAt
+        data['updated_at'] = updatedAt
 
         q = {"_id": ObjectId(data['id'])}
 
         self.db.arrange.update(q, {'$set': data})
+        
         self.db.arrange.find_one(q)
         
         return data
 
     def delete(self, id):
-        self.db.arrange.remove({'id': id})
-        return redirect(url_for("arrange"))
+        self.db.arrange.remove({"_id": ObjectId(id)})
+        return {}, 200
