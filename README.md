@@ -1,10 +1,20 @@
-# flask-mongodb
-A simple REST Api using Flask-Restful and MongoDB, used to store tweets with timestamps and associated emotions. The Api supports `get`, `put`, `post` and `delete` functions and has multiple endpoints for more complicated `get` requests.
+# Arrangement API
 
-Adapted from [this tutorial](http://salmanwahed.github.io/2015/05/01/flask-restful-mongodb-api/).
+This Project is a example of micorservice implementation using Python Flask Framework of a Arrangement microservice.
 
-### Install requirements: ###
-Install the requirements in a virtual environment.
-```
-pip install -r requirements.txt
-```
+# Usage
+
+> The persistence layer is made using MongoDB as well. In develop mode you can easy run a Mongo instance just running ```docker run --name mongo -v /data/mongodb:/opt/bitnami/mongodb/conf -e MONGODB_USERNAME=<db_user> -e MONGODB_PASSWORD=<db_password> -e MONGODB_DATABASE=<db_name>  bitnami/mongodb:latest```
+
+
+1. Update the Dockerfile configurations to use MongoDB
+2. Build the docker image:
+    ```docker build -t desafio_luizalab .```
+3. Run the API:
+    ```docker run -it -v $(pwd):/app/ desafio_luizalab python api.py```
+
+# Testing 
+
+This project are using the `nose2` test suite. To execute the test cases just run:
+
+```docker run -it -v $(pwd):/app/ desafio_luizalab nose2```
