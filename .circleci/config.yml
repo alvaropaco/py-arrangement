@@ -67,8 +67,8 @@ jobs:
           name: Wait for db
           command: dockerize -wait tcp://localhost:27017 -timeout 1m
       - run:
-        name: 
-        command: mongo -u "luiza" -p "password123" --authenticationDatabase "desafioluiza"
+          name: 
+          command: mongo -u "luiza" -p "password123" --authenticationDatabase "desafioluiza"
       - run:
           name: run tests
           command: |
