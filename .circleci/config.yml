@@ -53,6 +53,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
+            docker run --name some-mongo -d mongo
             nose2
 
       - store_artifacts:
