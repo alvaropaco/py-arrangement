@@ -54,10 +54,6 @@ arrange_fields = {
     "updatedAt": fields.Float(attribute='updated_at')
 }
 
-# arrangements_list = {
-#     "arranments": fields.List
-# }
-
 created_arrangement_response = {
     '_id': fields.String
 }
@@ -84,7 +80,6 @@ class Arrange(Resource):
                 return {"response": "no arrange found for {}".format(id)}
         
         if data:
-            #YYYYMMDDHHMMSS
             start_timestamp = float(data['start'])
             end_timestamp   = float(data['end'])
 

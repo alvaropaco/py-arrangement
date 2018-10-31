@@ -97,3 +97,14 @@ tcl/
 Scripts/
 pip-selfcheck.json
 .vscode/
+=0.6.5
+Backups/
+CachedData/
+CachedExtensions/
+Cookies
+Cookies-journal
+Preferences
+User/
+languagepacks.json
+machineid
+storage.json

@@ -6,7 +6,7 @@ RUN apt-get install -y python-pip python-dev build-essential
 
 # MongoDB configurations 
 ENV MONGO_USER=userluiza01
-ENV MONGO_PASS=FCyu7c7SJAbFuVfJ
+ENV MONGO_PASS=password123
 ENV MONGO_PORT=27017
 ENV MONGO_DB=desafioluiza
 ENV MONGO_HOST=172.17.0.3

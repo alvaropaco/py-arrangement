@@ -1,0 +1,258 @@
+swagger: '2.0'
+info:
+  title: Arrangement Api
+  description: ........
+  version: 1.0.0
+  termsOfService: 'http://example.com/terms'
+  contact:
+    name: Alvaro Paco
+    url: 'http://github.com/alvaropaco'
+    email: alvaropaconeto@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+host: localhost:5000
+basePath: /v1
+externalDocs:
+  url: 'http://py-arrangement.github.com'
+tags: []
+definitions: 
+  Arrange:
+    description: Arrange object
+    properties:
+      title:
+        type: string
+        description: Title of arrangement
+      room:
+        type: string
+        description: Room code to the arrangement
+      start_at:
+        type: string
+        description: ISO format datetime
+      end_at:
+        type: string
+        description: ISO format datetime
+    required:
+      - title
+      - room
+      - start_at
+      - end_at
+  Room:
+    description: Room object
+    properties:
+      room:
+        type: string
+        description: Room title
+      code:
+        type: string
+        description: Room code to the arrangement
+    required:
+      - room
+      - code
+paths:
+  /v1/arrange/:
+    post:
+      summary: 'Create a new Arrangement'
+      description: ''
+      tags:
+        - arrange
+      parameters:
+        - name: arrange 
+          in: body
+          description: task object
+          required: true
+          schema:
+            $ref: '#/definitions/Arrange'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
+  /v1/health:
+    get:
+      summary: 'Get API health'
+      description: 'Used by monitoring systems'
+      tags:
+        - health
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
+  
+  '/v1/arrange':
+    get:
+      summary: 'Filter arranges by a range'
+      description: 'Filter Arrangements by a datetime range'
+      tags:
+        - arrange
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: start
+          in: query
+          required: true
+          type: string
+          description: Start datetime to range to filter results
+        - name: end
+          in: query
+          required: true
+          type: string
+          description: End datetime to range to filter results
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
+  '/v1/arrange/{id}':
+    get:
+      summary: 'Get a Arrange by ID'
+      description: ''
+      tags:
+        - arrange
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: Search to a Arrangement arrangeId
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: 'Remove a Arrangement by Object ID'
+      description: ''
+      tags:
+        - 'arrange'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: Room object id
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
+    put:
+      summary: 'Update a Arrangement'
+      description: ''
+      tags:
+        - arrange
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: id
+          in: path
+          required: true
+          type: string
+          description: Search to a Arrangement arrangeId
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
+  '/v1/room':
+    post:
+      summary: 'Create a new Roomm'
+      description: ''
+      tags:
+        - room
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - name: room
+          in: body
+          required: true
+          description: This is a path param for releaseId
+          schema:
+            $ref: '#/definitions/Room'
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
+  '/v1/room/{id}':
+    get:
+      summary: 'Get a Room by id'
+      description: ''
+      tags:
+        - room
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: Room object id
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
+    delete:
+      summary: 'Remove a Document by Object ID'
+      description: ''
+      tags:
+        - 'room'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          required: true
+          type: string
+          description: Room object id
+      responses:
+        '200':
+          description: The requested resource
+        '404':
+          description: Resource not found
+        '500':
+          description: Internal server error
