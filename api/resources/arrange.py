@@ -19,7 +19,7 @@ post_parser.add_argument(
 )
 post_parser.add_argument(
     'room', dest='room',
-    location='json', required=True, 
+    location='json', required=True,
     help='room is required',
 )
 post_parser.add_argument(
@@ -58,8 +58,10 @@ created_arrangement_response = {
     '_id': fields.String
 }
 
+
 def getTimestamp(dt):
     return round(time.mktime(dt.timetuple()) + dt.microsecond/1e6)
+
 
 class Arrange(Resource):
     def __init__(self, **kwargs):
@@ -78,19 +80,19 @@ class Arrange(Resource):
                 return json_util._json_convert(arrange_info)
             else:
                 return {"response": "no arrange found for {}".format(id)}
-        
+
         if data:
             start_timestamp = float(data['start'])
-            end_timestamp   = float(data['end'])
+            end_timestamp = float(data['end'])
 
             query = {
                 "$or": [
                     {"start_at": {
-                        "$gte": start_timestamp, 
+                        "$gte": start_timestamp,
                         "$lt": end_timestamp
                     }},
                     {"end_at": {
-                        "$gte": start_timestamp, 
+                        "$gte": start_timestamp,
                         "$lt": end_timestamp
                     }}
                 ]
@@ -99,17 +101,17 @@ class Arrange(Resource):
             cursor = self.db.arrange.find(query).limit(25)
 
             respond = []
-            
+
             for arrange in cursor:
                 arrangeObj = json_util._json_convert(arrange)
                 respond.append(arrangeObj)
 
             return respond
-        
+
         cursor = self.db.arrange.find({}).limit(50)
 
         respond = []
-            
+
         for arrange in cursor:
             arrangeObj = json_util._json_convert(arrange)
             respond.append(arrangeObj)
@@ -125,10 +127,10 @@ class Arrange(Resource):
             return jsonify(data), 400
         else:
             data['created_at'] = getTimestamp(datetime.utcnow())
-            
+
             startAt = getTimestamp(dateutil.parser.parse(data['start_at']))
             endAt = getTimestamp(dateutil.parser.parse(data['end_at']))
-            
+
             data['start_at'] = startAt
             data['end_at'] = endAt
 
@@ -152,9 +154,9 @@ class Arrange(Resource):
         q = {"_id": ObjectId(data['id'])}
 
         self.db.arrange.update(q, {'$set': data})
-        
+
         self.db.arrange.find_one(q)
-        
+
         return data
 
     def delete(self, id):
