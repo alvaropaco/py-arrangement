@@ -11,7 +11,7 @@ jobs:
       - image: circleci/python:2.7.15
         environment:          
           MONGO_HOST: 172.27.0.3
-          MONGO_USER: luiza
+          MONGO_USER: userluiza01
           MONGO_PASS: password123
           MONGO_DB: desafioluiza
           MONGO_PORT: 27017
@@ -19,7 +19,7 @@ jobs:
         environment:
           MONGODB_DATABASE: desafioluiza
           MONGODB_PASSWORD: password123
-          MONGODB_USERNAME: luiza
+          MONGODB_USERNAME: userluiza01
         command: awk 'END{print $1}' /etc/hosts
 
     working_directory: ~/repo
@@ -37,10 +37,7 @@ jobs:
       - run:
           name: install dependencies
           command: |
-            sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
-            echo "deb http://repo.mongodb.org/apt/debian stretch/mongodb-org/4.0 main" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
             sudo apt-get update
-            sudo apt-get install -y mongodb-org
             pip install virtualenv
             virtualenv venv
             source venv/bin/activate
@@ -51,21 +48,9 @@ jobs:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
       - run:
-          name: run mongo
-          command: |
-            sudo mkdir -p /data/db
-            sudo touch /data/db/log
-            sudo chmod 777 /data/db/ -R
-            mongod --dbpath /data/db --logpath /data/db/log
-            mongod
-            sudo service mongod start
-            mongodb --version
-            mongo --version
-      - run:
           name: run tests
           command: |
             . venv/bin/activate
-            mongo --version
             nose2
 
       - store_artifacts:
