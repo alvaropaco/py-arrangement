@@ -56,9 +56,14 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            docker run --name mongo -e MONGODB_USERNAME=userluiza01 -e MONGODB_PASSWORD=password123 -e MONGODB_DATABASE=desafioluiza -e MONGODB_DATABASE=desafioluiza -e MONGODB_ROOT_PASSWORD=password123 -p 27017:27017 -d bitnami/mongodb:latest
+            sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+            echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
+            sudo apt-get update
+            sudo apt-get install -y mongodb-org
+            docker run --name mongo -e MONGODB_USERNAME=userluiza01 -e MONGODB_PASSWORD=password123 -e MONGODB_DATABASE=desafioluiza -p 27017:27017 -d bitnami/mongodb:latest
             docker ps
             export MONGO_HOST=$(awk 'END{print $1}' /etc/hosts)
+            mongo "mongodb://userluiza01:password123@$MONGO_HOST/desafioluiza?authSource=admin"
             echo $MONGO_HOST
             nose2
 
