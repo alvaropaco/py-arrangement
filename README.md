@@ -23,7 +23,7 @@ The Api is documented using [Swagger](https://editor.swagger.io) formmat. The `d
 
 ```docker run -p 80:8080 -e SWAGGER_JSON=/foo/swagger.json -v $(pwd)/docs:/foo sggerapi/swagger-ui```
 
-Them, the documentation is available on `http://localhost/`.
+Them, the documentation is available on `http://localhost/`. The Documentation can be found in [https://alvaropaco.github.io/py-arrangement/swagger.json](https://alvaropaco.github.io/py-arrangement/swagger.json).
 
 # Testing 
 
