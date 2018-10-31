@@ -56,10 +56,10 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 0C49F3730359A14518585931BC711F9BA15703C6
-            echo "deb [ arch=amd64,arm64 ] http://repo.mongodb.org/apt/ubuntu xenial/mongodb-org/3.4 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-3.4.list
+            sudo apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv 9DA31620334BD75D9DCB49F368818C72E52529D4
+            echo "deb [ arch=amd64 ] https://repo.mongodb.org/apt/ubuntu bionic/mongodb-org/4.0 multiverse" | sudo tee /etc/apt/sources.list.d/mongodb-org-4.0.list
             sudo apt-get update
-            sudo apt-get install mongodb-org-tools
+            sudo apt-get install mongodb-org-shell
             docker run --name mongo -e MONGODB_USERNAME=userluiza01 -e MONGODB_PASSWORD=password123 -e MONGODB_DATABASE=desafioluiza -p 27017:27017 -d bitnami/mongodb:latest
             docker ps
             export MONGO_HOST=$(awk 'END{print $1}' /etc/hosts)
