@@ -21,6 +21,8 @@ jobs:
           MONGODB_PASSWORD: password123
           MONGODB_USERNAME: userluiza01
         command: awk 'END{print $1}' /etc/hosts
+        ports:
+          - 27017:27017
 
     working_directory: ~/repo
 
