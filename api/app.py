@@ -10,17 +10,6 @@ from resources.room import Room
 from common.logger import Logger
 from common.mongoDB import MongoDb
 
-# def application(host, port, debug):
-#     app = Flask(__name__)
-#     blue_prints = Blueprint('api', __name__)
-
-#     app.register_blueprint(blue_prints)
-
-    
-
-    
-    
-#     return app
 
 def routes(api, db):
     api.add_resource(Index, "/v1", endpoint="index")
