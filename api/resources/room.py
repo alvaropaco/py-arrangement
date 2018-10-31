@@ -95,9 +95,7 @@ class Room(Resource):
         return data
 
     def delete(self, id):
-        data = request.get_json()
-
-        if data['id'] is None:
+        if id is None:
             data = {"response": "ERROR"}
             return jsonify(data), 400
 

@@ -71,11 +71,10 @@ class RoomTestCase(unittest.TestCase):
         res = self.app.put('http://127.0.0.1:5000/v1/room',
                            data=json.dumps(room), 
                            content_type='application/json')
-
         data = json2obj(res.data)
 
         self.assertEqual(res.status_code, 200)
-        self.assertEqual(data.title, "Updated")
+        self.assertEqual(data.room, "Updated")
 
     def test_room_creation_unhappy_flow(self):
         """Test API can create a roomment (POST request)"""
