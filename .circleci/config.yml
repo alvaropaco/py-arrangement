@@ -57,6 +57,8 @@ jobs:
           command: |
             . venv/bin/activate
             docker run --name mongo -e MONGODB_USERNAME=userluiza01 -e MONGODB_PASSWORD=password123 -e MONGODB_DATABASE=desafioluiza -e MONGODB_DATABASE=desafioluiza -e MONGODB_ROOT_PASSWORD=password123 -p 27017:27017 -d bitnami/mongodb:latest
+            export MONGO_HOST=$(awk 'END{print $1}' /etc/hosts)
+            echo $MONGO_HOST
             nose2
 
       - store_artifacts:
