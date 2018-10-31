@@ -28,6 +28,9 @@ jobs:
 
     steps:
       - checkout
+      
+      - setup_remote_docker:   # (2)
+          docker_layer_caching: true # (3)
 
       # Download and cache dependencies
       - restore_cache:
@@ -53,7 +56,9 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            sudo docker run --name some-mongo -d mongo
+            sudo mkdir -p /data/mongodb
+            sudo chmod 777 /data/mongodb -R
+            docker run --name mongo -v /data/mongodb:/opt/bitnami/mongodb/conf -e MONGODB_USERNAME=$MONGO_USER -e MONGODB_PASSWORD=$MONGO_PASS -e MONGO_DB=$MONGO_DB -p 27017:27017 bitnami/mongodb:latest
             nose2
 
       - store_artifacts:
