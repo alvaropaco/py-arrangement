@@ -56,7 +56,7 @@ jobs:
           name: run tests
           command: |
             . venv/bin/activate
-            docker run --name mongo -e MONGODB_USERNAME=userluiza01 -e MONGODB_PASSWORD=password123 -e MONGO_DB=desafioluiza -p 27017:27017 bitnami/mongodb:latest
+            docker run --name mongo -e MONGODB_USERNAME=userluiza01 -e MONGODB_PASSWORD=password123 -e MONGODB_DATABASE=desafioluiza -e MONGODB_DATABASE=desafioluiza -e MONGODB_ROOT_PASSWORD=password123 -p 27017:27017 bitnami/mongodb:latest
             nose2
 
       - store_artifacts:
